@@ -1,2 +1,45 @@
-<h1>Message#index</h1>
-<p>Find me in app/views/message/index.html.erb</p>
+<div class="row">
+
+  <div class="col">
+    <div class="chat">
+      <% @messages.each do |message| %>
+       <div class="chat-message-container">
+            <div class="row no-gutters">
+            <div class="col-auto text-center">
+              <img src="<%= gravatar_url(message.user) %>" class="avatar" alt="">
+            </div>
+
+            <div class="col">
+              <div class="message-content">
+                <p class="mb-1">
+                  <%= message.message %>
+                </p>
+
+                <div class="text-right">
+                  <small>
+                    <%= message.created_at %>
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%= simple_form_for @message, url: messages_path, remote: true do |form| %>
+      <div class="input-group mb-3">
+        <%= form.input :message, as: :string,
+                                 wrapper: false,
+                                 label: false,
+                                 input_html: {
+                                   class: 'chat-input'
+                                 } %>
+        <div class="input-group-append">
+          <%= form.submit "Send", class: 'btn btn-primary chat-input' %>
+        </div>
+      </div>
+
+    <% end %>
+  </div>
+</div>
