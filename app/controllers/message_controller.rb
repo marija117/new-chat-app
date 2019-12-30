@@ -11,8 +11,10 @@ class MessageController < ApplicationController
   def create
     @message = Message.new(message_params)
     @message.user_id = current_user.id
-   
     @message.save
+
+    ActionCable.server.broadcast("chat_channel", @message)
+
     redirect_to messages_path
   end
    
