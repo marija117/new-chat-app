@@ -1,0 +1,11 @@
+<%= simple_form_for @room do |form| %>
+  <%= form.input :name %>
+  <% @users.each do |user| %>
+    <div class="field">
+      <%= hidden_field_tag "user_ids[]", nil %>
+      <%= check_box_tag "user_ids[]", user.id, @room.user_ids.include?(user.id), id: dom_id(user) %>
+      <%= user.email %>
+    </div>
+  <% end %>
+  <%= form.submit "Save", class: 'btn btn-success' %>
+<% end %>

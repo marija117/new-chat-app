@@ -5,6 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :messages
+  has_many :rooms, foreign_key: :owner_id, dependent: :destroy
+  has_and_belongs_to_many :rooms
 
   def gravatar_url
     gravatar_id = Digest::MD5::hexdigest(email).downcase

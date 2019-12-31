@@ -1,5 +1,7 @@
 import consumer from "./consumer"
 
+// need to send room as param to server (subscribed method in chat_channel.rb)
+
 consumer.subscriptions.create("ChatChannel", {
   connected() {
     console.log("Connected to the chat!");
@@ -10,13 +12,14 @@ consumer.subscriptions.create("ChatChannel", {
   },
 
   received(data) {
-    console.log(data);
+    // console.log(data);
 
     this.appendLine(data)
   },
 
   appendLine(data) {
     const html = this.createLine(data)
+    // console.log(html)
     const element = document.querySelector("[data-channel-subscribe='chat']")
     element.insertAdjacentHTML("beforeend", html)
   },
@@ -24,22 +27,22 @@ consumer.subscriptions.create("ChatChannel", {
   createLine(data) {
     return `
     <div class="chat-message-container">
-    <div class="row no-gutters">
-      <div class="col">
-        <div class="message-content">
-          <p class="mb-1">
-            ${data["message"]}
-          </p>
+      <div class="row no-gutters">
+        <div class="col">
+          <div class="message-content">
+            <p class="mb-1">
+              ${data["message"]}
+            </p>
 
-          <div class="text-right">
-            <small>
-            ${data["created_at"]}
-            </small>
+            <div class="text-right">
+              <small>
+                ${data["created_at"]}
+              </small>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
     `
   }
 });
