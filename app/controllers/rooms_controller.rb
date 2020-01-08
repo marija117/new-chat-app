@@ -43,6 +43,12 @@ class RoomsController < ApplicationController
     end
   end
 
+  def destroy
+    @room.destroy
+ 
+    redirect_to rooms_path
+  end
+
   private
 
   def load_entities

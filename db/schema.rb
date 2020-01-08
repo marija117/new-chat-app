@@ -26,10 +26,11 @@ ActiveRecord::Schema.define(version: 2019_12_31_090951) do
   end
 
   create_table "rooms", force: :cascade do |t|
-    t.text "name"
+    t.text "name", null: false
     t.bigint "owner_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_rooms_on_name", unique: true
     t.index ["owner_id"], name: "index_rooms_on_owner_id"
   end
 
