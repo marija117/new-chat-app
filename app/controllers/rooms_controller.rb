@@ -1,20 +1,19 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_entities
+  before_action :cannot_update, only: :edit
 
   def index
-    @rooms = Room.all
   end
 
   def new
     @room = Room.new
-    @users = User.all
   end
 
   def create
     @room = Room.new room_parameters
     @room.owner_id = current_user.id
-    @room.user_ids = params[:user_ids]
+    @room.user_ids = params[:user_ids].push(current_user.id)
 
     if @room.save
       flash[:success] = "Room #{@room.name} was created successfully"
@@ -29,14 +28,36 @@ class RoomsController < ApplicationController
     @room_messages = @room.messages.includes(:user)
   end
 
+  def edit
+    @users = User.where.not(id: current_user.id)
+  end
+
+  def update
+    @room.user_ids = params[:user_ids].push(current_user.id)
+
+    if @room.update(room_parameters)
+      flash[:success] = "Room #{@room.name} was updated successfully"
+      redirect_to rooms_path
+    else
+      render :edit
+    end
+  end
+
   private
 
   def load_entities
-    @rooms = Room.all
+    @rooms = current_user.rooms
     @room = Room.find(params[:id]) if params[:id]
+    @users = User.where.not(id: current_user.id)
   end
 
   def room_parameters
     params.require(:room).permit(:name)
+  end
+
+  def cannot_update
+    if current_user != Room.find(params[:id]).user
+      redirect_to rooms_path
+    end
   end
 end

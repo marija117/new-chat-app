@@ -5,9 +5,17 @@
 </div>
 
 <% if @rooms.present? %>
-  <nav class="nav flex-column">
+  <nav class="nav flex-row">
     <% @rooms.each do |room| %>
-      <%= link_to room.name, room_path(room), class: 'nav-link room-nav-link' %>
+      <div class="d-flex justify-content-start mb-2">
+        <%= link_to room.name, room_path(room), class: 'nav-link room-nav-link' %>
+        
+        <% if room.owner_id == current_user.id %>
+          <%= link_to edit_room_path(room), class: 'btn btn-primary' do %>
+            Update a room
+          <% end %>
+        <% end %>
+      </div>
     <% end %>
   </nav>
 <% else %>
