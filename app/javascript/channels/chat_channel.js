@@ -1,8 +1,12 @@
 import consumer from "./consumer"
 
 // need to send room as param to server (subscribed method in chat_channel.rb)
-
-consumer.subscriptions.create("ChatChannel", {
+document.addEventListener("turbolinks:load", function() {
+  consumer.subscriptions.create(
+  {
+    channel: "ChatChannel",
+    room: document.querySelector("[data-channel-subscribe='chat']").getAttribute("data-room-id"),
+  } ,{
   connected() {
     console.log("Connected to the chat!");
   },
@@ -45,4 +49,5 @@ consumer.subscriptions.create("ChatChannel", {
     </div>
     `
   }
+});
 });
