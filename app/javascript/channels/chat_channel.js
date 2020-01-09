@@ -25,7 +25,9 @@ document.addEventListener("turbolinks:load", function() {
     const html = this.createLine(data)
     // console.log(html)
     const element = document.querySelector("[data-channel-subscribe='chat']")
-    element.insertAdjacentHTML("beforeend", html)
+    if (data["room_id"] == document.querySelector("[data-channel-subscribe='chat']").getAttribute("data-room-id")) {
+      element.insertAdjacentHTML("beforeend", html)
+    }
   },
  
   createLine(data) {
