@@ -1,8 +1,13 @@
 import consumer from "./consumer"
 
-consumer.subscriptions.create("UserChannel", {
+document.addEventListener("turbolinks:load", function() {
+consumer.subscriptions.create(
+  {
+    channel: "UserChannel",
+    user: document.querySelector("[data-channel-subscribe='user']").getAttribute("data-user-id"),
+  } ,{
   connected() {
-    // Called when the subscription is ready for use on the server
+    console.log("Connected to the notifications!");
   },
 
   disconnected() {
@@ -10,6 +15,24 @@ consumer.subscriptions.create("UserChannel", {
   },
 
   received(data) {
-    // Called when there's incoming data on the websocket for this channel
-  }
+    this.appendLine(data)
+  },
+
+  appendLine(data) {
+    // const html = this.createLine(data)
+    // console.log(html)
+    let element = document.getElementById("p11")
+    console.log(element)
+    element.innerHTML = data["new_messages"]
+    // element.insertAdjacentHTML("beforeend", html)
+  },
+ 
+  // createLine(data) {
+  //   return `
+  //   <div>
+  //     <p>${data["new_messages"]}</p>
+  //   </div>
+  //   `
+  // }
+});
 });

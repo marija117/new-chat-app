@@ -5,7 +5,7 @@ class RoomsController < ApplicationController
 
   def index
     # @rooms.each do |room|
-    #   @unreaded_messages = room.message_statuses.where(user_id: current_user.id, read: false).count
+    #   @unreaded_messages = @room.message_statuses.where(read: false).where(user_id: current_user.id).count + 1
     # end
   end
 
@@ -59,6 +59,7 @@ class RoomsController < ApplicationController
     @rooms = current_user.rooms    
     @room = Room.find(params[:id]) if params[:id]
     @users = User.where.not(id: current_user.id)
+    @unreaded_messages = @room.message_statuses.where(read: false).where(user_id: current_user.id).count+1
   end
 
   def room_parameters
