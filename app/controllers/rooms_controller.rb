@@ -26,6 +26,7 @@ class RoomsController < ApplicationController
   def show
     @room_message = Message.new room_id: @room.id
     @room_messages = @room.messages.includes(:user)
+    @room.message_statuses.where(user_id: current_user.id).update(read: true)
   end
 
   def edit
@@ -52,9 +53,10 @@ class RoomsController < ApplicationController
   private
 
   def load_entities
-    @rooms = current_user.rooms
+    @rooms = current_user.rooms    
     @room = Room.find(params[:id]) if params[:id]
     @users = User.where.not(id: current_user.id)
+    @unreaded_messages = @room.message_statuses.where(user_id: current_user.id, read: false).count
   end
 
   def room_parameters

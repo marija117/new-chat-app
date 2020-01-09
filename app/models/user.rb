@@ -7,6 +7,8 @@ class User < ApplicationRecord
   has_many :messages
   has_many :rooms, foreign_key: :owner_id, dependent: :destroy
   has_and_belongs_to_many :rooms
+  has_many :message_statuses
+  has_many :messages, through: :message_statuses
 
   def gravatar_url
     gravatar_id = Digest::MD5::hexdigest(email).downcase

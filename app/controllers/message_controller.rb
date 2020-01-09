@@ -8,6 +8,9 @@ class MessageController < ApplicationController
     @room = Room.find(message_params[:room_id])
 
     if @message.save
+      @room.users.each do |user|
+        MessageStatus.create(user_id: user.id, message_id: @message.id, room_id: @room.id)
+      end
       ChatChannel.broadcast_to @room, @message
     else
       logger.debug "Errors: #{@message.errors.full_messages}"
