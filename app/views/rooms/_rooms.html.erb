@@ -8,9 +8,9 @@
   <nav class="nav flex-row">
     <div class="chat" data-channel-subscribe='user' data-user-id="<%= current_user.id %>">
       <% @rooms.each do |room| %>
-        <div class="d-flex justify-content-start mb-2">
-          <%= link_to room.name, room_path(room), class: 'nav-link room-nav-link' %>
-          <p id="notification" data-room-id="<%= room.id %>"></p>
+        <div class="d-flex justify-content-between mb-2">
+          <%= link_to room.name, room_path(room), class: 'nav-link room-nav-link parent'%>
+          <p id="notification" data-room-id="<%= room.id %>"><%= room.message_statuses.where(read: false).where(user_id: current_user.id).count==0 ? ' ' : room.message_statuses.where(read: false).where(user_id: current_user.id).count %></p>
           <% if room.owner_id == current_user.id %>
             <%= link_to edit_room_path(room), class: 'btn btn-primary' do %>
               Update

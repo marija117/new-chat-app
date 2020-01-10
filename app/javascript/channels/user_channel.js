@@ -27,9 +27,25 @@ document.addEventListener("turbolinks:load", function() {
       function getElement(element) {
         if(element.getAttribute("data-room-id") == data["room_id"]) {
           room = element
+          console.log(room)
         }
+        
+        // if (element.innerHTML == 0) { 
+        //   console.log(element.innerHTML)
+        //   element.classList.add("hidden");
+        // }
       }
-      room.innerHTML = data["new_messages"]
+
+      const html = this.createLine(data)
+      room.insertAdjacentHTML("afterend", html)
+      room.remove()
+    },
+
+    createLine(data) {
+      return `
+        <p id="notification" data-room-id="${data["room_id"]}">${data["new_messages"]}</p>
+
+      `
     }
   });
 });
