@@ -3,8 +3,7 @@ import consumer from "./consumer"
 document.addEventListener("turbolinks:load", function() {
   consumer.subscriptions.create(
     {
-      channel: "UserChannel",
-      user: document.querySelector("[data-channel-subscribe='user']").getAttribute("data-user-id"),
+      channel: "UserChannel"
     } ,{
     connected() {
       console.log("Connected to the notifications!");
@@ -29,11 +28,7 @@ document.addEventListener("turbolinks:load", function() {
           room = element
           console.log(room)
         }
-        
-        // if (element.innerHTML == 0) { 
-        //   console.log(element.innerHTML)
-        //   element.classList.add("hidden");
-        // }
+
       }
 
       const html = this.createLine(data)
