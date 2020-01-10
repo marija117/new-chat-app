@@ -14,10 +14,10 @@ class MessageController < ApplicationController
     if @message.save
       @members.each do |user|
         @unreaded_messages = @room.message_statuses.where(read: false).where(user_id: user.id).count + 1
-        logger.debug @unreaded_messages
         MessageStatus.create(user_id: user.id, message_id: @message.id, room_id: @room.id)
-        UserChannel.broadcast_to user, 
-          new_messages:  @unreaded_messages
+        UserChannel.broadcast_to user,
+          new_messages:  @unreaded_messages,
+          room_id: @room.id
       end
       ChatChannel.broadcast_to @room, @message
     else

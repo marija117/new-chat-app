@@ -1,38 +1,35 @@
 import consumer from "./consumer"
 
 document.addEventListener("turbolinks:load", function() {
-consumer.subscriptions.create(
-  {
-    channel: "UserChannel",
-    user: document.querySelector("[data-channel-subscribe='user']").getAttribute("data-user-id"),
-  } ,{
-  connected() {
-    console.log("Connected to the notifications!");
-  },
+  consumer.subscriptions.create(
+    {
+      channel: "UserChannel",
+      user: document.querySelector("[data-channel-subscribe='user']").getAttribute("data-user-id"),
+    } ,{
+    connected() {
+      console.log("Connected to the notifications!");
+    },
 
-  disconnected() {
-    // Called when the subscription has been terminated by the server
-  },
+    disconnected() {
+      // Called when the subscription has been terminated by the server
+    },
 
-  received(data) {
-    this.appendLine(data)
-  },
+    received(data) {
+      console.log("bilo sta")
+      this.appendLine(data)
+    },
 
-  appendLine(data) {
-    // const html = this.createLine(data)
-    // console.log(html)
-    let element = document.getElementById("p11")
-    console.log(element)
-    element.innerHTML = data["new_messages"]
-    // element.insertAdjacentHTML("beforeend", html)
-  },
- 
-  // createLine(data) {
-  //   return `
-  //   <div>
-  //     <p>${data["new_messages"]}</p>
-  //   </div>
-  //   `
-  // }
-});
+    appendLine(data) {
+      let elements = document.querySelectorAll("#notification")
+      let room
+      elements.forEach(element => getElement(element));
+
+      function getElement(element) {
+        if(element.getAttribute("data-room-id") == data["room_id"]) {
+          room = element
+        }
+      }
+      room.innerHTML = data["new_messages"]
+    }
+  });
 });
