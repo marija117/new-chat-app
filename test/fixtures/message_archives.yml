@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  room: one
+  old_messages: MyText
+  from_date: 2020-01-14 15:23:16
+  to_date: 2020-01-14 15:23:16
+
+two:
+  room: two
+  old_messages: MyText
+  from_date: 2020-01-14 15:23:16
+  to_date: 2020-01-14 15:23:16

@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_14_084822) do
+ActiveRecord::Schema.define(version: 2020_01_14_142316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "message_archives", force: :cascade do |t|
+    t.bigint "room_id", null: false
+    t.jsonb "old_messages"
+    t.datetime "from_date"
+    t.datetime "to_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["room_id"], name: "index_message_archives_on_room_id"
+  end
 
   create_table "messages", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -56,6 +66,7 @@ ActiveRecord::Schema.define(version: 2020_01_14_084822) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "message_archives", "rooms"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
   add_foreign_key "room_members", "rooms"
