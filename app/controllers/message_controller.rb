@@ -6,17 +6,16 @@ class MessageController < ApplicationController
     @message = Message.new(message_params)
     @message.user_id = current_user.id
     @room = Room.find(message_params[:room_id])
-    # @room.users.each do |user|
-    #   @unreaded_messages = @room.message_statuses.where(user_id: user.id, read: false).count
-    # end
     @members = @room.users.where.not(id: current_user.id)
+    @roomMember = RoomMember.where(user_id: current_user.id, room_id: @room.id).first_or_create
+    @roomMember.update(last_read: Time.now)
 
     if @message.save
+
       @members.each do |user|
-        @unreaded_messages = @room.message_statuses.where(read: false).where(user_id: user.id).count + 1
-        MessageStatus.create(user_id: user.id, message_id: @message.id, room_id: @room.id)
+        RoomMember.first_or_create(user_id: user.id, room_id: @room.id)
         UserChannel.broadcast_to user,
-          new_messages:  @unreaded_messages,
+          new_messages: @room.unreaded_messages(user),
           room_id: @room.id
       end
       ChatChannel.broadcast_to @room, @message

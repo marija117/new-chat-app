@@ -2,11 +2,9 @@ class RoomsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_entities
   before_action :cannot_update, only: :edit
+  before_action :is_member, only: :show
 
   def index
-    # @rooms.each do |room|
-    #   @unreaded_messages = @room.message_statuses.where(read: false).where(user_id: current_user.id).count + 1
-    # end
   end
 
   def new
@@ -29,7 +27,7 @@ class RoomsController < ApplicationController
   def show
     @room_message = Message.new room_id: @room.id
     @room_messages = @room.messages.includes(:user)
-    @room.message_statuses.where(user_id: current_user.id).update(read: true)
+    RoomMember.where(user_id: current_user.id, room_id: @room.id).update(last_read: Time.now)
   end
 
   def edit
@@ -59,7 +57,6 @@ class RoomsController < ApplicationController
     @rooms = current_user.rooms    
     @room = Room.find(params[:id]) if params[:id]
     @users = User.where.not(id: current_user.id)
-    # @unreaded_messages = @room.message_statuses.where(read: false).where(user_id: current_user.id).count
   end
 
   def room_parameters
@@ -70,5 +67,9 @@ class RoomsController < ApplicationController
     if current_user != Room.find(params[:id]).user
       redirect_to rooms_path
     end
+  end
+
+  def is_member
+    @room.room_members.include?(:user)
   end
 end
