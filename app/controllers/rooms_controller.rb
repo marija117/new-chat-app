@@ -26,8 +26,18 @@ class RoomsController < ApplicationController
 
   def show
     @room_message = Message.new room_id: @room.id
-    @room_messages = @room.messages.includes(:user)
+    @message_archive = MessageArchive.where(room_id: @room.id).last
+    @new_messages = @room.messages.includes(:user).as_json(only: [:message, :user_id, :created_at])
+    @messages = @message_archive ? @message_archive.old_messages.concat(@new_messages) : @new_messages
+
     RoomMember.where(user_id: current_user.id, room_id: @room.id).update(last_read: Time.now)
+
+    respond_to do |format|
+      format.js
+      format.html { render :show }
+    #   format.html { redirect_to @room }
+    #   format.json { render status: :success, room_messages: @room_messages, json: @room_messages }
+    end
   end
 
   def edit
@@ -70,6 +80,8 @@ class RoomsController < ApplicationController
   end
 
   def is_member
-    @room.room_members.include?(:user)
+    if ! @room.users.include?(current_user)
+      redirect_to rooms_path
+    end
   end
 end

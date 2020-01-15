@@ -3,7 +3,7 @@ class Room < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :room_members, dependent: :destroy
   has_many :users, :through => :room_members
-  has_many :message_archives 
+  has_many :message_archives, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true, length: { minimum: 5 }
 

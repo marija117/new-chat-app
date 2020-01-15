@@ -8,27 +8,13 @@
   </div>
 
   <div class="col">
-    <div id="room_messages" class="chat" data-channel-subscribe='chat' data-room-id="<%= @room.id %>">
-      <% @room_messages.each do |room_message| %>
-        <div class="chat-message-container">
-          <div class="row no-gutters">
-
-            <div class="col">
-              <div class="message-content" id="msg-element">
-                <p class="mb-1">
-                  <%= room_message.message %>
-                </p>
-
-                <div class="text-right">
-                  <small>
-                    <%= room_message.created_at %>
-                  </small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      <% end %>
+    <div class="chat" data-channel-subscribe='chat' data-room-id="<%= @room.id %>">
+      <div class="d-flex justify-content-center">
+        <%= link_to "Load older messages", room_path(@room.id), remote: true, last_read: :created_at %>
+      </div>
+      <div id="room_messages">
+        <%= render partial: 'message'%>
+      </div>
     </div>
 
     <%= simple_form_for @room_message, remote: true do |form| %>

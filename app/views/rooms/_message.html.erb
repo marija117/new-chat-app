@@ -1,0 +1,19 @@
+<% @messages.each do |message| %>
+  <div class="chat-message-container" id="ajax-messages">
+    <div class="row no-gutters">
+      <div class="col">
+        <div class="message-content" id="msg-element">
+          <p class="mb-1">
+              <%= message["message"] %>
+          </p>
+
+          <div class="text-right">
+              <small>
+              <%= message["created_at"] %>
+              </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -18,6 +18,6 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-every 1.minute do
-    rake 'batch:archive_messages'
+every 1.minutes do
+    rake 'batch:archive_message'
 end
