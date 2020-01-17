@@ -1,1 +1,1 @@
-document.querySelector('#room_messages').append("<%= escape_javascript(render partial: 'message') %>");
+document.querySelector('#room_messages').insertAdjacentHTML('beforeend',"<%= escape_javascript(render partial: 'messages') %>");

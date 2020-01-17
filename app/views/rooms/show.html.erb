@@ -1,5 +1,5 @@
 <h1>
-  <%= @room.name %>
+  <%= @room.name %>old_messages
 </h1>
 
 <div class="row">
@@ -10,10 +10,15 @@
   <div class="col">
     <div class="chat" data-channel-subscribe='chat' data-room-id="<%= @room.id %>">
       <div class="d-flex justify-content-center">
-        <%= link_to "Load older messages", room_path(@room.id), remote: true, last_read: :created_at %>
+        <% if @message_archive %>
+          <%= simple_form_for @room, :url => old_messages_path(@room), :method => :get, remote: true do |form| %>
+            <%= form.submit "Load older messages", id: "old_messages" %>
+            <%= hidden_field_tag :previous_archive, @message_archive.from_date, id: "from_date" %>
+          <% end %>
+        <% end %>
       </div>
       <div id="room_messages">
-        <%= render partial: 'message'%>
+        <%= render partial: 'messages'  %>
       </div>
     </div>
 
@@ -34,3 +39,4 @@
     <% end %>
   </div>
 </div>
+<%= javascript_pack_tag "archives" %>

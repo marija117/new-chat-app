@@ -19,7 +19,7 @@ namespace :batch do
         room_id: room.id,
         from_date: Time.now - 1.day,
         to_date: Time.now,
-        old_messages: @old_messages
+        old_messages: @old_messages.reverse
       )
 
       @readed_messages.delete_all
