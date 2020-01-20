@@ -1,8 +1,10 @@
 <% @messages.each do |message| %>
   <div class="chat-message-container">
     <div class="row no-gutters">
-      <div class="col">
-        <div class="message-content" id="msg-element">
+      <div class="col d-flex">     
+        <img class="avatar p-2" src="<%= current_user.gravatar_url %>">
+
+        <div class="message-content flex-grow-1 msg-element">
           <p class="mb-1">
               <%= message["message"] %>
           </p>
@@ -12,7 +14,7 @@
              <%= message["created_at"] %>
             </small>
           </div>
-        </div>
+         </div>  
       </div>
     </div>
   </div>

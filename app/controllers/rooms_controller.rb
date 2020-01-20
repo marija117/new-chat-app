@@ -66,6 +66,8 @@ class RoomsController < ApplicationController
 
   def load_entities
     @rooms = current_user.rooms    
+    logger.debug "@@@@@@@@@@@@@@@@@@@@@@@@@"
+    logger.debug params[:id]
     @room = Room.find(params[:id]) if params[:id]
     @users = User.where.not(id: current_user.id)
   end

@@ -8,7 +8,7 @@
   </div>
 
   <div class="col">
-    <div class="chat" data-channel-subscribe='chat' id="parent" data-room-id="<%= @room.id %>">
+    <div class="chat msg-box" data-channel-subscribe='chat' data-room-id="<%= @room.id %>">
       <div class="d-flex justify-content-center">
         <% if @message_archive %>
           <%= simple_form_for @room, :url => old_messages_path(@room), :method => :get, remote: true do |form| %>
@@ -17,12 +17,12 @@
           <% end %>
         <% end %>
       </div>
-      <div id="room_messages">
+      <div class="room_messages">
         <%= render partial: 'messages'  %>
       </div>
     </div>
 
-    <%= simple_form_for @room_message, remote: true do |form| %>
+    <%= simple_form_for @room_message, :url => room_messages_path(@room), remote: true do |form| %>
       <div class="input-group mb-3">
         <%= form.input :message, as: :string,
                                  wrapper: false,
@@ -34,8 +34,6 @@
           <%= form.submit "Send", class: 'btn btn-primary chat-input' %>
         </div>
       </div>
-
-      <%= form.input :room_id, as: :hidden %>
     <% end %>
   </div>
 </div>

@@ -5,13 +5,16 @@ class MessageController < ApplicationController
   def create
     @message = Message.new(message_params)
     @message.user_id = current_user.id
-    @room = Room.find(message_params[:room_id])
+    @message.room_id = params[:room_id]
+    @room = Room.find(params[:room_id])
     @members = @room.users.where.not(id: current_user.id)
     @roomMember = RoomMember.where(user_id: current_user.id, room_id: @room.id).first_or_create
     @roomMember.update(last_read: Time.now)
 
-    if @message.save
+    logger.debug message_params
+    logger.debug @room.id
 
+    if @message.save
       @members.each do |user|
         RoomMember.first_or_create(user_id: user.id, room_id: @room.id)
         UserChannel.broadcast_to user,
@@ -26,6 +29,6 @@ class MessageController < ApplicationController
    
   private
      def message_params
-      params.require(:message).permit(:message, :room_id)
+      params.require(:message).permit(:message)
     end
 end

@@ -26,9 +26,9 @@ document.addEventListener("turbolinks:load", function() {
     const element = document.querySelector("[data-channel-subscribe='chat']")
     if (data["room_id"] == document.querySelector("[data-channel-subscribe='chat']").getAttribute("data-room-id")) {
       element.insertAdjacentHTML("beforeend", html)
-      let parent = document.querySelector('#parent');
+      let msgBox = document.querySelector('.msg-box');
 
-      parent.scrollTop = parent.scrollHeight;
+      msgBox.scrollTop = msgBox.scrollHeight;
     }
   },
  
