@@ -23,10 +23,12 @@ document.addEventListener("turbolinks:load", function() {
 
   appendLine(data) {
     const html = this.createLine(data)
-    // console.log(html)
     const element = document.querySelector("[data-channel-subscribe='chat']")
     if (data["room_id"] == document.querySelector("[data-channel-subscribe='chat']").getAttribute("data-room-id")) {
       element.insertAdjacentHTML("beforeend", html)
+      let parent = document.querySelector('#parent');
+
+      parent.scrollTop = parent.scrollHeight;
     }
   },
  

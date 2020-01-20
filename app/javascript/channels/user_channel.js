@@ -14,8 +14,6 @@ document.addEventListener("turbolinks:load", function() {
     },
 
     received(data) {
-      console.log("bilo sta")
-      console.log(data["new_messages"])
       this.appendLine(data)
     },
 
