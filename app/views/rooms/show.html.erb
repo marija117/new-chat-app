@@ -13,7 +13,7 @@
         <% if @message_archive %>
           <%= simple_form_for @room, :url => old_messages_path(@room), :method => :get, remote: true do |form| %>
             <%= form.submit "Load older messages", id: "old_messages" %>
-            <%= hidden_field_tag :previous_archive, @message_archive.from_date, id: "from_date" %>
+            <%= hidden_field_tag :previous_archive, Time.now(), id: "from_date" %>
           <% end %>
         <% end %>
       </div>
@@ -33,6 +33,7 @@
         <div class="input-group-append">
           <%= form.submit "Send", class: 'btn btn-primary chat-input' %>
         </div>
+        <%= hidden_field_tag :message_id, nil, class: "message_id" %>
       </div>
     <% end %>
   </div>

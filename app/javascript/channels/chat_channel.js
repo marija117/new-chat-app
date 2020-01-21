@@ -17,19 +17,32 @@ document.addEventListener("turbolinks:load", function() {
 
   received(data) {
     // console.log(data);
-
-    this.appendLine(data)
+    if (data["updated_at"] === data["created_at"]) {
+      this.appendLine(data)
+    } else {
+      this.editMessage(data)
+    }
   },
 
   appendLine(data) {
     const html = this.createLine(data)
     const element = document.querySelector("[data-channel-subscribe='chat']")
+
     if (data["room_id"] == document.querySelector("[data-channel-subscribe='chat']").getAttribute("data-room-id")) {
       element.insertAdjacentHTML("beforeend", html)
       let msgBox = document.querySelector('.msg-box');
 
       msgBox.scrollTop = msgBox.scrollHeight;
     }
+  },
+
+  editMessage(data) {
+    let messages = document.querySelectorAll(".content");
+    messages.forEach(function (msg) {
+      if (msg.dataset.messageId == data["id"]) {
+        msg.innerHTML = data["message"]
+      }
+    })
   },
  
   createLine(data) {

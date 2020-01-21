@@ -9,9 +9,9 @@
     color: white;
   }
 
-  & + .chat-message-container {
-    margin-top: 10px;
-  }
+  // & + .chat-message-container {
+  //   margin-top: 10px;
+  // }
 }
 
 .hidden {
@@ -22,7 +22,9 @@
   max-height: 40px;
   border-radius: 50%;
 }
-
+.pointer {
+  cursor: pointer;
+}
 // .parent {
 //   position: relative;
 //   display: inline-block;

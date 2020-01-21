@@ -25,7 +25,8 @@ function handleIntersect(entries, observer) {
 let observer = new IntersectionObserver(handleIntersect, options);
 
 let target = document.querySelector('#old_messages');
-observer.observe(target);
+if (target)
+    observer.observe(target);
 
 function loadOlderMessages() {
     let room_id = document.querySelector("[data-channel-subscribe='chat']").getAttribute("data-room-id");
@@ -41,7 +42,7 @@ function loadOlderMessages() {
             else{   
                 msgBox.scrollTop = msg.scrollHeight * 3;
 
-                let old_messages = data["messages"]["old_messages"]
+                let old_messages = data["messages"]["old_messages"].reverse();
                 var html
                 document.querySelector("#from_date").value = data["from_date"]
                 
@@ -54,8 +55,7 @@ function loadOlderMessages() {
                                     <p class="mb-1">` 
                                         + msg["message"] +
                                     `</p>
-                            
-                                    <div class="text-right">
+                                    <div class="text-right"> 
                                         <small>`
                                             + msg["created_at"] +
                                         `</small>
@@ -78,3 +78,15 @@ function scrollToBottom() {
 }
   
 scrollToBottom();
+
+function editMessage() {
+    let editIcons = document.querySelectorAll('.fa.fa-edit');
+    editIcons.forEach(function(icon) {
+        icon.addEventListener("click", (event) => {
+            document.querySelector(".chat-input").value = icon.dataset.messageContent;
+            document.querySelector(".message_id").value = icon.dataset.messageId;
+        });
+    });  
+}
+
+editMessage();

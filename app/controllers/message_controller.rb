@@ -3,16 +3,15 @@ class MessageController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    @message = Message.new(message_params)
+    @message = Message.find_or_initialize_by(id: params[:message_id])
+
+    @message.message = message_params[:message]
     @message.user_id = current_user.id
     @message.room_id = params[:room_id]
     @room = Room.find(params[:room_id])
     @members = @room.users.where.not(id: current_user.id)
     @roomMember = RoomMember.where(user_id: current_user.id, room_id: @room.id).first_or_create
     @roomMember.update(last_read: Time.now)
-
-    logger.debug message_params
-    logger.debug @room.id
 
     if @message.save
       @members.each do |user|
@@ -28,7 +27,7 @@ class MessageController < ApplicationController
   end
    
   private
-     def message_params
+    def message_params
       params.require(:message).permit(:message)
     end
 end

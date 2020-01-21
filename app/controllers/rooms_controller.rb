@@ -28,17 +28,15 @@ class RoomsController < ApplicationController
     @room_message = Message.new room_id: @room.id
     @message_archive = MessageArchive.where(room_id: @room.id).where("old_messages !=  ?", "[]").last
    
-    @new_messages = @room.messages.includes(:user).as_json(only: [:message, :user_id, :created_at])
-    @messages = @message_archive ? @message_archive.old_messages.concat(@new_messages) : @new_messages
-
+    @messages = @room.messages.includes(:user).order(:created_at).as_json(only: [:message, :user_id, :created_at, :updated_at, :id])
     RoomMember.where(user_id: current_user.id, room_id: @room.id).update(last_read: Time.now)
   end
 
   def load_old_messages
-    @previous_archive = MessageArchive.where(room_id: @room.id).where("from_date < ?", params[:previous_archive]).where("old_messages !=  ?", "[]").last
+    @previous_archive = MessageArchive.where(room_id: @room.id).where("from_date < ?", DateTime.parse(params[:previous_archive])).where("old_messages !=  ?", "[]").last
     @from_date = @previous_archive.from_date if @previous_archive
 
-    render json: { messages: @previous_archive, from_date: @from_date }
+    render json: { messages: @previous_archive, from_date: @from_date, current_user_id: current_user.id}
   end
 
   def edit
@@ -66,8 +64,6 @@ class RoomsController < ApplicationController
 
   def load_entities
     @rooms = current_user.rooms    
-    logger.debug "@@@@@@@@@@@@@@@@@@@@@@@@@"
-    logger.debug params[:id]
     @room = Room.find(params[:id]) if params[:id]
     @users = User.where.not(id: current_user.id)
   end

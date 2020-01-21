@@ -10,6 +10,7 @@ namespace :batch do
       @readed_messages.each do |msg|
         @old_messages << {
           user_id: msg.user_id,
+          id: msg.id,
           message: msg.message,
           created_at: msg.created_at
         }
@@ -19,7 +20,7 @@ namespace :batch do
         room_id: room.id,
         from_date: Time.now - 1.day,
         to_date: Time.now,
-        old_messages: @old_messages.reverse
+        old_messages: @old_messages
       )
 
       @readed_messages.delete_all
