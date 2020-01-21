@@ -28,10 +28,10 @@
                                  wrapper: false,
                                  label: false,
                                  input_html: {
-                                   class: 'chat-input'
+                                   class: 'chat-input message-field'
                                  } %>
         <div class="input-group-append">
-          <%= form.submit "Send", class: 'btn btn-primary chat-input' %>
+          <%= form.submit "Send", class: 'btn btn-primary chat-input submit-message' %>
         </div>
         <%= hidden_field_tag :message_id, nil, class: "message_id" %>
       </div>
