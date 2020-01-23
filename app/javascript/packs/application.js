@@ -10,6 +10,27 @@ require("jquery")
 require("@rails/activestorage").start()
 require("channels")
 
+
+import TurbolinksAdapter from 'vue-turbolinks'
+import Vue from 'vue/dist/vue.esm'
+import App from '../components/app.vue'
+
+Vue.use(TurbolinksAdapter)
+
+document.addEventListener('turbolinks:load', () => {
+  const app = new Vue({
+    el: '[data-behavior="vue"]',
+    data: () => {
+      return {
+        message: "Can you say hello?"
+      }
+    },
+    components: { 
+        App
+    }
+  })
+})
+
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
 // or the `imagePath` JavaScript helper below.
