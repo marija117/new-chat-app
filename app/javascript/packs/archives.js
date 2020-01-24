@@ -24,10 +24,6 @@ if (target)
 let msgBox = document.querySelector('.msg-box');
 let msg = document.querySelector(".msg-element");
 
-let messagesContainer = document.querySelector("[data-channel-subscribe='chat']");
-messagesContainer.addEventListener("load", (event) => {
-    loadOlderMessages()
-});
 
 function scrollToBottom() {
     msgBox.scrollTop = msgBox.scrollHeight;

@@ -1,7 +1,5 @@
 import Rails from "@rails/ujs"
 
-let msgBox = document.querySelector('.msg-box');
-let msg = document.querySelector(".msg-element");
 let messagesContainer = document.querySelector("[data-channel-subscribe='chat']");
 
 export function loadOlderMessages() {
@@ -16,7 +14,6 @@ export function loadOlderMessages() {
                 document.querySelector("#old_messages").remove()
             }   
             else{   
-                msgBox.scrollTop = msg.scrollHeight * 3;
 
                 let old_messages = data["messages"]["old_messages"].reverse();
                 var html
@@ -47,4 +44,7 @@ export function loadOlderMessages() {
         },
         error: function(data) {}
     })
+    messagesContainer.addEventListener("load", (event) => {
+        loadOlderMessages()
+    });
 }

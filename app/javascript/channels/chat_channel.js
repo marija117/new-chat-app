@@ -1,11 +1,12 @@
 import consumer from "./consumer"
+import load from "../packs/components/Load.vue"
 
 // need to send room as param to server (subscribed method in chat_channel.rb)
 document.addEventListener("turbolinks:load", function() {
   consumer.subscriptions.create(
   {
     channel: "ChatChannel",
-    room: document.querySelector("[data-channel-subscribe='chat']").getAttribute("data-room-id"),
+    room: document.querySelector("#room").getAttribute(":room_id"),
   } ,{
   connected() {
     console.log("Connected to the chat!");
@@ -37,10 +38,13 @@ document.addEventListener("turbolinks:load", function() {
 
   editMessage(data) {
     let messages = document.querySelectorAll(".content");
+
     messages.forEach(function (msg) {
-      if (msg.dataset.messageId == data["id"]) {
+      if (msg.getAttribute("data-message-id") == data["id"]) {
         msg.innerHTML = data["message"]
+        let msgBox = document.querySelector('.msg-box');
         document.querySelector(".message-field").value = "";
+        msgBox.scrollTop = msgBox.scrollHeight;
       }
     })
   },
@@ -56,6 +60,9 @@ document.addEventListener("turbolinks:load", function() {
             </p>
 
             <div class="text-right">
+              <small v-if="user_id == message.user_id">
+                <i class="fa fa-edit pointer" :data-message-content="message.message" :data-message-id="message.id"></i> |
+              </small>
               <small>
                 ${data["created_at"]}
               </small>

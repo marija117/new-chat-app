@@ -5,7 +5,15 @@ class MessageController < ApplicationController
   def create
     @message = Message.find_or_initialize_by(id: params[:message_id])
 
-    @message.message = message_params[:message]
+    if !(Message.where(id: params[:message_id]).present?)
+      @message.id = Message.maximum(:id).next
+    end
+  
+    if Message.maximum(:id).nil?
+      @message.id = 1
+    end
+    
+    @message.message = params[:message]
     @message.user_id = current_user.id
     @message.room_id = params[:room_id]
     @room = Room.find(params[:room_id])
@@ -25,9 +33,4 @@ class MessageController < ApplicationController
       logger.debug "Errors: #{@message.errors.full_messages}"
     end
   end
-   
-  private
-    def message_params
-      params.require(:message).permit(:message)
-    end
 end
