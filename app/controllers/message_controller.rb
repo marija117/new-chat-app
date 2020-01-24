@@ -3,9 +3,13 @@ class MessageController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
+    logger.debug "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    logger.debug params[:message]
+    logger.debug params[:message_id]
+
     @message = Message.find_or_initialize_by(id: params[:message_id])
 
-    @message.message = message_params[:message]
+    @message.message = params[:message]
     @message.user_id = current_user.id
     @message.room_id = params[:room_id]
     @room = Room.find(params[:room_id])
@@ -25,9 +29,4 @@ class MessageController < ApplicationController
       logger.debug "Errors: #{@message.errors.full_messages}"
     end
   end
-   
-  private
-    def message_params
-      params.require(:message).permit(:message)
-    end
 end
