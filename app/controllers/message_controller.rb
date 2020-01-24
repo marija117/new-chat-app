@@ -3,12 +3,11 @@ class MessageController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    logger.debug "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-    logger.debug params[:message]
-    logger.debug params[:message_id]
-
     @message = Message.find_or_initialize_by(id: params[:message_id])
 
+    # Why doesn't increment id automaticly ?
+    # Need to manaly set id, becouse it always sets it on 0.
+    @message.id = Message.maximum(:id).next
     @message.message = params[:message]
     @message.user_id = current_user.id
     @message.room_id = params[:room_id]
