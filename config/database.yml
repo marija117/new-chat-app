@@ -1,17 +1,17 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  database: <%= ENV.fetch('POSTGRES_DB', 'chatapp') %>
-  username: <%= ENV.fetch('POSTGRES_USER', 'chatapp') %>
+  database: 'chatapp'
+  username: 'chatapp'
   password: <%= ENV.fetch('POSTGRES_PASSWORD','secret') %>
-  host: <%= ENV.fetch('POSTGRES_HOST', 'localhost') %>
+  host: 'localhost'
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000
 
 development:
   <<: *default
-  database: <%= ENV.fetch('POSTGRES_DB', 'chatapp') %>
-  username: <%= ENV.fetch('POSTGRES_USER', 'chatapp') %>
+  database: 'chatapp'
+  username: 'chatapp'
   password: <%= ENV.fetch('POSTGRES_PASSWORD','secret') %>
 
 # Warning: The database defined as "test" will be erased and
@@ -19,7 +19,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: <%= ENV.fetch('POSTGRES_DB', 'chatapp') + '_test'  %>
+  database: 'chatapp_test'
 
 production:
   <<: *default

@@ -5,9 +5,7 @@ class MessageController < ApplicationController
   def create
     @message = Message.find_or_initialize_by(id: params[:message_id])
 
-    # Why doesn't increment id automaticly ?
-    # Need to manaly set id, becouse it always sets it on 0.
-    @message.id = Message.maximum(:id).next
+    @message.id = params[:message_id]
     @message.message = params[:message]
     @message.user_id = current_user.id
     @message.room_id = params[:room_id]

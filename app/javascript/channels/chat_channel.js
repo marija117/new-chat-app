@@ -1,8 +1,7 @@
 import consumer from "./consumer"
 
-// need to send room as param to server (subscribed method in chat_channel.rb)
 document.addEventListener("turbolinks:load", function() {
-  consumer.subscriptions.create(
+  let chatChannel = consumer.subscriptions.create(
   {
     channel: "ChatChannel",
     room: document.querySelector("[data-channel-subscribe='chat']").getAttribute("data-room-id"),

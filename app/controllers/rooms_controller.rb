@@ -25,21 +25,23 @@ class RoomsController < ApplicationController
   end
 
   def show
-    @room_message = Message.new room_id: @room.id
-    @message_archive = MessageArchive.where(room_id: @room.id).where("old_messages !=  ?", "[]").last
-   
+    @room_message = Message.new room_id: @room.id   
     @messages = @room.messages.includes(:user).order(:created_at).as_json(only: [:message, :user_id, :created_at, :updated_at, :id])
     RoomMember.where(user_id: current_user.id, room_id: @room.id).update(last_read: Time.now)
 
     respond_to do |format|
-      format.json { render json: { messages: @messages, messageArchive: @message_archive } }
+      format.json { render json: { messages: @messages } }
       format.html
     end
   end
 
   def load_old_messages
     @previous_archive = MessageArchive.where(room_id: @room.id).where("from_date < ?", DateTime.parse(params[:previous_archive])).where("old_messages !=  ?", "[]").last
-    @from_date = @previous_archive.from_date if @previous_archive
+    @from_date = @previous_archive ? @previous_archive.from_date : nil
+
+    logger.debug "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+    logger.debug params[:previous_archive]
+    logger.debug @from_date
 
     render json: { messages: @previous_archive, from_date: @from_date, current_user_id: current_user.id}
   end
