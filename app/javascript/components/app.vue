@@ -83,19 +83,15 @@ export default {
         type: "get",
         data: "previous_archive=" + this.previousArchive,
         success: function(data) {
-          console.log("success u ajax poziv");
-          console.log(data.messages.old_messages)
           if (data.messages) {
-            self.previousArchive = data.from_date
-            this.data = data.from_date;
+            self.previousArchive = data.messages.from_date
+            this.data = data.messages.from_date;
             self.messages = data.messages.old_messages.concat(self.messages);
           } else {
             self.previousArchive = null
           }
-      },
-      error: function(data) {
-        alert(data);
-      }
+        },
+        error: function(data) {}
       })
     },
     sendMessage(e) {

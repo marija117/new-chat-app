@@ -35,15 +35,10 @@ class RoomsController < ApplicationController
     end
   end
 
-  def load_old_messages
+  def load_old_messages    
     @previous_archive = MessageArchive.where(room_id: @room.id).where("from_date < ?", DateTime.parse(params[:previous_archive])).where("old_messages !=  ?", "[]").last
-    @from_date = @previous_archive ? @previous_archive.from_date : nil
 
-    logger.debug "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
-    logger.debug params[:previous_archive]
-    logger.debug @from_date
-
-    render json: { messages: @previous_archive, from_date: @from_date, current_user_id: current_user.id}
+    render json: { messages: @previous_archive, current_user_id: current_user.id}
   end
 
   def edit
