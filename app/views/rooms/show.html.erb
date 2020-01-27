@@ -7,7 +7,9 @@
     <%= render partial: 'rooms' %>
   </div>
 
-  <div class="col" data-channel-subscribe='chat' data-room-id="<%= @room.id %>">
-    <app :room_id="<%= @room.id %>" :current_user="<%= current_user.id %>"></app>
+  <div class="col">
+    <div>
+      <app :room_id="<%= @room.id %>" :current_user="<%= current_user.id %>" id='room'></app>
+    </div>
   </div>
 </div>

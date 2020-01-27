@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="chat messages-container">
+        <div class="chat messages-container" data-channel-subscribe='chat' :data-room-id="room_id">
       <div class="d-flex justify-content-center">
         <div v-if="previousArchive">
 
@@ -19,13 +19,12 @@
 
                 <div class="text-right">
                   <small v-if="current_user == message.user_id">
-                    <i class="fa fa-edit pointer" @click="editMessage(message)" :data-message-content="message.message" :data-message-id="message.id"></i>
+                    <i class="fa fa-edit pointer" @click="editMessage(message)" :data-message-content="message.message" :data-message-id="message.id"></i> |
                   </small>
-                  |
-                  <small v-if="isEdited">
-                    Edited
+                  
+                  <small v-if="edited(message)">
+                    Edited  |
                   </small>
-                  |
                   <small>
                     {{ message.created_at }}
                   </small>
@@ -37,15 +36,18 @@
       </div>
     </div>
 
-    <form class="input-group mb-3" @submit="sendMessage">
-      <textarea class='chat-input message-field' v-model="message"></textarea>
-      <div class="input-group-append">
-        <button type="submit" class='btn btn-primary chat-input submit-message'>Send</button>
-      </div>
-      <div v-if="message">
-        <input type="hidden" v-model="message.id" class="message_id">
-      </div>
-    </form>
+      <div  d-flex row>
+          <div class="input-group mb-3">
+            <textarea class='chat-input message-field col' v-model="message"></textarea>
+            <div class="input-group-append">
+              <button type="submit" class='btn btn-primary col chat-input submit-message' @click="sendMessage">Send</button>
+            </div>
+            <div v-if="message">
+              <input type="hidden" :value="message.id" class="message_id">
+            </div>
+          </div>
+           </div>
+
   </div>
 </template>
 
@@ -129,11 +131,8 @@ export default {
       this.message_id = message.id;
       this.message = message.message;
     },
-    loadMessage(message) {
-      let created_at = new Date(message.created_at); 
-      let updated_at = new Date(message.updated_at); 
-
-      this.isEdited = updated_at.getTime() > created_at.getTime();
+    edited(message) {
+      return message.updated_at > message.created_at;
     }
   }
 
