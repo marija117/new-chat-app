@@ -10,12 +10,10 @@ require("jquery")
 require("@rails/activestorage").start()
 require("channels")
 
-
 import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
 import moment from 'moment'
-import App from '../components/app.vue'
-import Observer from '../components/observer.vue'
+import ChatRoom from '../components/chat-room.vue'
 
 Vue.use(TurbolinksAdapter)
 
@@ -27,15 +25,9 @@ Vue.filter('formatDate', function(value) {
 
 document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
-    el: '[data-behavior="vue"]',
-    data: () => {
-      return {
-        message: "Can you say hello?"
-      }
-    },
+    el: '#chat',
     components: { 
-        App,
-        Observer
+      ChatRoom,
     }
   })
 })

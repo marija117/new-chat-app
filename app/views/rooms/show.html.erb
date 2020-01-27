@@ -8,8 +8,8 @@
   </div>
 
   <div class="col">
-    <div>
-      <app :room_id="<%= @room.id %>" :current_user="<%= current_user.id %>" id='room'></app>
+    <div id="chat">
+      <chat-room :room_id="<%= @room.id %>" :current_user="<%= current_user.id %>" id='room'></chat-room>
     </div>
   </div>
 </div>
