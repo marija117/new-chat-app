@@ -1,32 +1,26 @@
 <template>
   <div id="app">
-        <div class="chat messages-container" data-channel-subscribe='chat' :data-room-id="room_id">
+    <div class="chat messages-container" data-channel-subscribe='chat' :data-room-id="room_id">
       <div class="d-flex justify-content-center">
-        <div v-if="previousArchive">
-
-          <Observer @intersect="intersected" v-model="previousArchive" :options="options"/>
-          
-        </div>
+        <observer v-if="previousArchive" @intersect="intersected" v-model="previousArchive" :options="options"/>
       </div>
       <div class="room_messages">
         <div v-for="message in messages" class="chat-message-container">
           <div class="row no-gutters">
             <div class="col d-flex">     
-              <div class="message-content flex-grow-1 msg-element" @load="loadMessage(message)">
-                <p class="mb-1 content" :data-message-id="message.id">
+              <div class="message-content flex-grow-1 msg-element">
+                <p class="mb-1 content">
                   {{ message.message }}
                 </p>
-
                 <div class="text-right">
-                  <small v-if="current_user == message.user_id">
-                    <i class="fa fa-edit pointer" @click="editMessage(message)" :data-message-content="message.message" :data-message-id="message.id"></i> |
+                  <small v-if="current_user == message.user_id && message.updated_at">
+                    <i class="fa fa-edit pointer" @click="editMessage(message)"></i> |
                   </small>
-                  
                   <small v-if="edited(message)">
                     Edited  |
                   </small>
                   <small>
-                    {{ message.created_at }}
+                    {{ message.created_at | formatDate }}
                   </small>
                 </div>
               </div>
@@ -36,18 +30,15 @@
       </div>
     </div>
 
-      <div  d-flex row>
-          <div class="input-group mb-3">
-            <textarea class='chat-input message-field col' v-model="message"></textarea>
-            <div class="input-group-append">
-              <button type="submit" class='btn btn-primary col chat-input submit-message' @click="sendMessage">Send</button>
-            </div>
-            <div v-if="message">
-              <input type="hidden" :value="message.id" class="message_id">
-            </div>
-          </div>
-           </div>
-
+    <form class="input-group mb-3" @submit.prevent="sendMessage">
+      <input type="text" class='chat-input message-field col' v-model="message.message"/>
+      <div class="input-group-append">
+        <button :disabled="!message.message" type="submit" class='btn btn-primary col chat-input submit-message'>Send</button>
+      </div>
+      <div v-if="message">
+        <input type="hidden" :value="message.id" class="message_id">
+      </div>
+    </form>
   </div>
 </template>
 
@@ -61,7 +52,7 @@ export default {
   data: function () {
     return {
       messages: [],
-      message: null,
+      message: [],
       message_id: '',
       previousArchive: new Date(),
       isEdited: false,
@@ -96,9 +87,7 @@ export default {
         error: function(data) {}
       })
     },
-    sendMessage(e) {
-      e.preventDefault();
-
+    sendMessage() {
       let self = this;
 
       Rails.ajax({
@@ -106,9 +95,9 @@ export default {
         type: "post",
         dataType: "json",
         contentType: "application/json",
-        data: "message=" + this.message + "&message_id=" + this.message_id,
+        data: "message=" + this.message.message + "&message_id=" + this.message_id,
         success: function(data) {
-          self.message = null;
+          self.message = [];
           self.message_id = '';
         },
         error: function() {}
@@ -129,13 +118,12 @@ export default {
     },
     editMessage(message) {
       this.message_id = message.id;
-      this.message = message.message;
+      this.message = message;
     },
     edited(message) {
       return message.updated_at > message.created_at;
     }
   }
-
 }
 </script>
 

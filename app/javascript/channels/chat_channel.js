@@ -1,5 +1,4 @@
 import consumer from "./consumer"
-import app from "../components/app.vue"
 
 document.addEventListener("turbolinks:load", function() {
   let chatChannel = consumer.subscriptions.create(

@@ -1,5 +1,5 @@
 <template>
-  <div class="observer">
+  <div>
     <a href="#">Load older messages</a>
   </div>
 </template>
@@ -16,7 +16,6 @@ export default {
     const options = this.options || {};
     this.observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        console.log("*******************intersection:ture*******************");
         this.$emit("intersect");
       }
     }, options);
