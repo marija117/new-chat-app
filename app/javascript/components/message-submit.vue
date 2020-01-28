@@ -26,9 +26,7 @@ export default {
   },
   watch: {
     message(){
-      if(message){
-        this.msg = this.message;
-      }
+      this.msg = this.message;
     }
   }
 }
