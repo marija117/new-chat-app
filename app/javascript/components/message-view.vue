@@ -1,7 +1,7 @@
 <template>
-  <div class="chat messages-container" data-channel-subscribe='chat' :data-room-id="room_id">
+  <div class="chat messages-container">
     <div class="d-flex justify-content-center">
-      <observer v-if="previousArchive" @intersect="intersected" v-model="previousArchive" :options="options"/>
+      <observer v-if="fromDate" @intersect="loadOldMessages()" :options="options"/>
     </div>
     <div class="room_messages">
       <div v-for="message in messages" class="chat-message-container">
@@ -15,7 +15,7 @@
                 <small v-if="current_user == message.user_id && message.updated_at">
                   <i class="fa fa-edit pointer" @click="editMessage(message)"></i> |
                 </small>
-                <small v-if="edited(message)">
+                <small>
                   Edited  |
                 </small>
                 <small>
@@ -32,17 +32,29 @@
 
 
 <script>
-import Rails from "@rails/ujs";
 import Observer from "./observer";
-import { serverBus } from '../packs/application';
 
 export default {
-  props: ["room_id", "current_user"],
+  props: {
+    loadOldMessages: {
+      type: Function
+    },
+    fromDate: {
+      type: String
+    },
+    editMessage: {
+      type: Function
+    },
+    messages: {
+      type: Array
+    },
+    current_user: {
+      type: Number
+    },
+  },
   components: {Observer},
   data: function () {
     return {
-      messages: [],
-      previousArchive: new Date(),
       isEdited: false,
       options: {
         root: null,
@@ -52,55 +64,7 @@ export default {
     }
   },
   mounted() {
-    this.getMessages();
     this.options.root = this.$el.querySelector(".messages-container");
-    serverBus.$on('sendMessage', data => {
-      if (data.updated_at > data.created_at) {
-        const edit = (msg) => msg.id == data.id;
-        this.messages.find(edit).message = data.message;
-      }
-      else {
-        this.messages.push(data)
-      }
-    })
-  },
-  methods: {
-    intersected() {      
-      Rails.ajax({
-        url: "/rooms/" + this.room_id + "/old_messages",
-        type: "get",
-        data: "previous_archive=" + this.previousArchive,
-        success: (data) => {
-          if (data.messages) {
-            this.previousArchive = data.messages.from_date
-            this.messages = data.messages.old_messages.concat(this.messages);
-          } else {
-            this.previousArchive = null
-          }
-        },
-        error: (data) => {}
-      })
-    },
-    getMessages() {
-      Rails.ajax({
-        url: "/rooms/" + this.room_id,
-        type: "get",
-        data: "",
-        success: (data) => {
-          this.messages = data.messages
-        },
-        error: (data) => {}
-      })
-    },
-    editMessage(message) {
-
-      this.message_id = message.id;
-      this.message = message;
-      serverBus.$emit("editMessage", message);
-    },
-    edited(message) {
-      return message.updated_at > message.created_at;
-    }
   }
 }
 </script>

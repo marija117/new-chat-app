@@ -1,20 +1,58 @@
 <template>
   <div>
-    <header :room_id="room_id"/>
-    <message-view :room_id="room_id" :current_user="current_user"/>
-    <message-submit :room_id="room_id"/>
+    <header/>
+    <message-view 
+      :messages="messages" 
+      :current_user="current_user" 
+      :loadOldMessages="loadOldMessages" 
+      :fromDate="fromDate" 
+      :editMessage="editMessage"/>
+    <message-submit 
+      :onSubmit="onSubmit"  
+      :message="message"/>
   </div>
 </template>
 
 <script>
-import Rails from "@rails/ujs";
-import Observer from "./observer";
 import messageSubmit from "./message-submit";
 import messageView from "./message-view";
 
 export default {
-  props: ["room_id", "current_user"],
-  components: {Observer, messageSubmit, messageView},
+  props: {
+    onSubmit: {
+      type: Function
+    },
+    loadOldMessages: {
+      type: Function
+    },
+    editMessage: {
+      type: Function
+    },
+    fromDate: {
+      type: String
+    },
+    messages: {
+      type: Array
+    },
+    message: {
+      type: Object
+    },
+    current_user: {
+      type: Number
+    },
+    room_id:{
+      type: Number
+    }
+  },
+  data() {
+    return {
+    }
+  },
+
+  methods: {   
+    
+  },
+  components: {messageSubmit, messageView},
 }
 </script>
 
