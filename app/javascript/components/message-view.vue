@@ -55,7 +55,13 @@ export default {
     this.getMessages();
     this.options.root = this.$el.querySelector(".messages-container");
     serverBus.$on('sendMessage', data => {
-      this.messages.push(data)
+      if (data.updated_at > data.created_at) {
+        const edit = (msg) => msg.id == data.id;
+        this.messages.find(edit).message = data.message;
+      }
+      else {
+        this.messages.push(data)
+      }
     })
   },
   methods: {
@@ -87,8 +93,10 @@ export default {
       })
     },
     editMessage(message) {
+
       this.message_id = message.id;
       this.message = message;
+      serverBus.$emit("editMessage", message);
     },
     edited(message) {
       return message.updated_at > message.created_at;
