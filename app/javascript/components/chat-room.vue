@@ -1,7 +1,7 @@
 <template>
   <div>
     <header :room_id="room_id"/>
-    <message-view :room_id="room_id"/>
+    <message-view :room_id="room_id" :current_user="current_user"/>
     <message-submit :room_id="room_id"/>
   </div>
 </template>

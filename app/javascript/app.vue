@@ -1,28 +1,19 @@
-import TurbolinksAdapter from 'vue-turbolinks'
-import Vue from 'vue/dist/vue.esm'
-import moment from 'moment'
-import App from '../components/app.vue'
-import Observer from '../components/observer.vue'
+<template>
+  <div>
+    <chat-room :room_id="room_id" :current_user="current_user"/>
+  </div>
+</template>
 
-Vue.use(TurbolinksAdapter)
+<script>
+import Rails from "@rails/ujs";
+import chatRoom from "./components/chat-room";
 
-Vue.filter('formatDate', function(value) {
-  if (value) {
-    return moment(String(value)).format('MM/DD/YYYY hh:mm')
-  }
-});
+export default {
+  props: ["room_id", "current_user"],
+  components: {chatRoom},
+}
+</script>
 
-document.addEventListener('turbolinks:load', () => {
-  const app = new Vue({
-    el: '[data-behavior="vue"]',
-    data: () => {
-      return {
-        message: "Can you say hello?"
-      }
-    },
-    components: { 
-        App,
-        Observer
-    }
-  })
-})
+<style lang="css">
+
+</style>

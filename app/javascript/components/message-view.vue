@@ -34,6 +34,7 @@
 <script>
 import Rails from "@rails/ujs";
 import Observer from "./observer";
+import { serverBus } from '../packs/application';
 
 export default {
   props: ["room_id", "current_user"],
@@ -53,6 +54,9 @@ export default {
   mounted() {
     this.getMessages();
     this.options.root = this.$el.querySelector(".messages-container");
+    serverBus.$on('sendMessage', data => {
+      this.messages.push(data)
+    })
   },
   methods: {
     intersected() {      

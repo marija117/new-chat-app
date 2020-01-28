@@ -14,6 +14,8 @@
 
 <script>
 import Rails from "@rails/ujs";
+import consumer from "../channels/consumer"
+import { serverBus } from '../packs/application';
 
 export default {
   props: ['room_id'],
@@ -22,6 +24,23 @@ export default {
       message: [],
       message_id: '',
     }
+  },
+  mounted() {
+    consumer.subscriptions.create(
+      {
+        channel: "ChatChannel",
+        room: this.room_id,
+      } ,{
+      connected() {
+        console.log("Connected to the chat!");
+      },
+      disconnected() {
+        // Called when the subscription has been terminated by the server
+      },
+      received(data) {
+        serverBus.$emit("sendMessage", data)
+      }
+    });
   },
   methods: {
     sendMessage() {

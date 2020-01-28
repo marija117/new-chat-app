@@ -13,7 +13,7 @@ require("channels")
 import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
 import moment from 'moment'
-import ChatRoom from '../components/chat-room.vue'
+import App from '../app'
 
 Vue.use(TurbolinksAdapter)
 
@@ -23,11 +23,13 @@ Vue.filter('formatDate', function(value) {
   }
 });
 
+export const serverBus = new Vue();
+
 document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
     el: '#chat',
     components: { 
-      ChatRoom,
+      App,
     }
   })
 })
