@@ -1,22 +1,22 @@
 <template>
-  <div class="chat messages-container">
+  <div class="chat messages-container" ref="messagesContainer">
     <div class="d-flex justify-content-center">
       <observer v-if="fromDate" @intersect="loadOldMessages()" :options="options"/>
     </div>
     <div class="room_messages">
-      <div v-for="message in messages" class="chat-message-container">
-        <div class="row no-gutters">
+      <div v-for="(message, index) in messages" class="chat-message-container">
+        <div class="row no-gutters" @change="getElement(index)">
           <div class="col d-flex">     
-            <div class="message-content flex-grow-1 msg-element">
-              <p class="mb-1 content">
+            <div class="message-content flex-grow-1 msg-element" :class="{ otherUser: current_user !== message.user_id }">
+              <p class="mb-1 content" :class="{ 'text-right': current_user !== message.user_id }">
                 {{ message.message }}
               </p>
-              <div class="text-right">
-                <small v-if="current_user == message.user_id && message.updated_at">
+              <div :class="{ 'text-right': current_user == message.user_id }">
+                <small v-if="current_user == message.user_id && !message.archived">
                   <i class="fa fa-edit pointer" @click="editMessage(message)"></i> |
                 </small>
-                <small>
-                  Edited  |
+                <small v-if="message.updated_at > message.created_at">
+                  Edited |
                 </small>
                 <small>
                   {{ message.created_at | formatDate }}
@@ -55,7 +55,6 @@ export default {
   components: {Observer},
   data: function () {
     return {
-      isEdited: false,
       options: {
         root: null,
         rootMargin: '0px',
@@ -64,7 +63,16 @@ export default {
     }
   },
   mounted() {
-    this.options.root = this.$el.querySelector(".messages-container");
+    this.options.root = this.$refs.messagesContainer;
+  },
+  updated() {
+    let container = this.$refs.messagesContainer;
+    container.scrollTop = container.scrollHeight + container.clientHeight;
+  },
+  methods: {
+    getElement(index) {
+      console.log(index);
+    }
   }
 }
 </script>

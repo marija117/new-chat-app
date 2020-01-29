@@ -8,6 +8,12 @@
     background: lighten(rgb(18, 99, 131), 10%);
     color: white;
   }
+  .otherUser {
+    padding: 5px;
+    border: 1px solid #c0dce7;
+    background: #c0dce7;
+    color: #007bff;
+  }
 
   // & + .chat-message-container {
   //   margin-top: 10px;
@@ -25,19 +31,20 @@
 .pointer {
   cursor: pointer;
 }
-// .parent {
-//   position: relative;
-//   display: inline-block;
-// }
+.parent {
+  position: relative;
+  display: inline-block;
+}
 
-// p#notification {
-//   position: absolute;
-//   padding: 2px 7px;
-//   margin-left: 70px;
-//   border-radius: 50%;
-//   background-color: red;
-//   color: white;
-// }
+p#notification {
+  position: absolute;
+  padding: 2px 8px;
+  margin-left: 70px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+}
+
 .chat {
   background: lighten(grey, 50%);
   height: 50vh;

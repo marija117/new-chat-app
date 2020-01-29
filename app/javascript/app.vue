@@ -24,7 +24,7 @@ export default {
     return {
       messages: [],
       message: null,
-      fromDate: new Date().toString(),
+      fromDate: new Date().toString()
     }
   },
   mounted() {
@@ -45,6 +45,7 @@ export default {
         if (data.updated_at > data.created_at) {
           const edit = (msg) => msg.id == data.id;
           self.messages.find(edit).message = data.message;
+          self.messages.find(edit).updated_at = data.updated_at;
         }
         else {
           self.messages.push(data)
@@ -97,14 +98,10 @@ export default {
         },
         error: (data) => {}
       })
-    },
-    edited(message) {
-      return message.updated_at > message.created_at;
     }
-  },
+  }
 }
 </script>
-
-<style lang="css">
+<style scoped>
 
 </style>

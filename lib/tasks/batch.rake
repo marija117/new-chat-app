@@ -12,7 +12,9 @@ namespace :batch do
           user_id: msg.user_id,
           id: msg.id,
           message: msg.message,
-          created_at: msg.created_at
+          created_at: msg.created_at,
+          updated_at: msg.updated_at,
+          archived: true
         }
       end
       
