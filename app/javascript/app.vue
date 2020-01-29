@@ -42,10 +42,9 @@ export default {
         // Called when the subscription has been terminated by the server
       },
       received(data) {
-        console.log(data)
         if (data.updated_at > data.created_at) {
           const edit = (msg) => msg.id == data.id;
-          this.messages.find(edit).message = data.message;
+          self.messages.find(edit).message = data.message;
         }
         else {
           self.messages.push(data)
@@ -66,13 +65,17 @@ export default {
       })
     },
    sendMessage(message) {
+      let message_id = message.id || '';
+
       Rails.ajax({
         url: "/rooms/" + this.room_id + "/messages",
         type: "post",
         dataType: "json",
         contentType: "application/json",
-        data: "message=" + message.message + "&message_id" + message.id,
-        success: (data) => {},
+        data: "message=" + message.message + "&message_id=" + message_id,
+        success: (data) => {
+          this.message = {}
+        },
         error: (data) => {}
       })
     }, 
