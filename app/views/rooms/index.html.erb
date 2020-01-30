@@ -1,8 +1,7 @@
 <div class="row">
-  <div class="col-12 col-md-3">
-    <%= render partial: 'rooms' %>
+  <div class="col-8 col-md-3" id="chat">
+    <rooms :rooms="<%= @rooms.to_json %>" :current_user="<%= current_user.id %>"/>
   </div>
-
   <div class="col">
     <div class="alert alert-primary">
       <h4 class="alert-heading">

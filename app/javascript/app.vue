@@ -1,13 +1,20 @@
 <template>
-  <div>
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <rooms 
+        :rooms="rooms"
+        :current-user="currentUser"/>
+    </div>
     <chat-room 
-      :onSubmit="sendMessage" 
-      :editMessage="editMessage" 
-      :loadOldMessages="loadOldMessages" 
-      :fromDate="fromDate" 
-      :current_user="current_user" 
+      :on-submit="sendMessage" 
+      :edit-message="editMessage" 
+      :load-old-messages="loadOldMessages"
+      :delete-room="deleteRoom"
+      :from-date="fromDate" 
+      :current-user="currentUser" 
       :messages="messages" 
       :message="message" 
+      :room="room"
       :room_id="room_id"/>
   </div>
 </template>
@@ -16,12 +23,22 @@
 import Rails from "@rails/ujs";
 import consumer from "./channels/consumer";
 import chatRoom from "./components/chat-room";
+import rooms from "./components/rooms";
 
 export default {
-  props: ["room_id", "current_user"],
-  components: {chatRoom},
+  props: {
+    room_id: {
+      type: Number
+    },
+    currentUser: {
+      type: Number
+    }
+  },
+  components: {chatRoom, rooms},
    data: function () {
     return {
+      rooms: [],
+      room: null,
       messages: [],
       message: null,
       fromDate: new Date().toString()
@@ -29,6 +46,7 @@ export default {
   },
   mounted() {
     let self = this;
+    this.getRooms();
     this.getMessages();
     consumer.subscriptions.create(
       {
@@ -54,13 +72,25 @@ export default {
     });
   },
   methods: {
+    getRooms() {
+      Rails.ajax({
+        url: "/rooms",
+        type: "get",
+        data: "",
+        success: (data) => {
+          this.rooms = data.rooms
+        },
+        error: (data) => {}
+      })
+    },
     getMessages() {
       Rails.ajax({
         url: "/rooms/" + this.room_id,
         type: "get",
         data: "",
         success: (data) => {
-          this.messages = data.messages
+          this.messages = data.messages;
+          this.room = data.room;
         },
         error: (data) => {}
       })
@@ -95,6 +125,17 @@ export default {
           } else {
             this.fromDate = null;
           }
+        },
+        error: (data) => {}
+      })
+    },
+    deleteRoom() {
+      Rails.ajax({
+        url: "/rooms/" + this.room_id,
+        type: "delete",
+        data: "",
+        success: (data) => {
+          this.room = null;
         },
         error: (data) => {}
       })

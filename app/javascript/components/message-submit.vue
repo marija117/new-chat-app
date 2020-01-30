@@ -1,7 +1,7 @@
 <template>
     <div>   
       <form class="input-group mb-3" @submit.prevent="onSubmit(msg)">
-        <input type="text" class='chat-input message-field col' v-model="msg.message"/>
+        <input placeholder="Write your message here" type="text" class='chat-input message-field col' v-model="msg.message"/>
         <div class="input-group-append">
           <button :disabled="!msg.message" type="submit" class='btn btn-primary col chat-input submit-message'>Send</button>
         </div>

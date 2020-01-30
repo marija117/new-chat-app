@@ -5,6 +5,10 @@ class RoomsController < ApplicationController
   before_action :is_member, only: :show
 
   def index
+    respond_to do |format|
+      format.json { render json: { rooms: @rooms } }
+      format.html
+    end
   end
 
   def new
@@ -30,7 +34,7 @@ class RoomsController < ApplicationController
     RoomMember.where(user_id: current_user.id, room_id: @room.id).update(last_read: Time.now)
 
     respond_to do |format|
-      format.json { render json: { messages: @messages } }
+      format.json { render json: { messages: @messages, room: @room } }
       format.html
     end
   end

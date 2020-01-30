@@ -3,8 +3,6 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
-import Rails from "@rails/ujs"
-Rails.start()
 require("turbolinks").start()
 require("jquery")
 require("@rails/activestorage").start()
@@ -14,7 +12,10 @@ import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
 import moment from 'moment'
 import App from '../app'
+import Rooms from '../components/rooms'
+import VueRouter from 'vue-router'
 
+Vue.use(VueRouter)
 Vue.use(TurbolinksAdapter)
 
 Vue.filter('formatDate', function(value) {
@@ -23,13 +24,16 @@ Vue.filter('formatDate', function(value) {
   }
 });
 
-export const serverBus = new Vue();
+Vue.filter('truncate', function (text, stop, clamp) {
+  return text.slice(0, stop) + (stop < text.length ? clamp || '...' : '')
+})
 
 document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
     el: '#chat',
     components: { 
-      App,
+      App, 
+      Rooms
     }
   })
 })
