@@ -21,6 +21,7 @@ export default {
     subscription(room) {
       let self = this;
       self.rooms.push(room)
+      console.log(self.rooms)
       if (self.rooms.length == 1) {
         consumer.subscriptions.create(
           {

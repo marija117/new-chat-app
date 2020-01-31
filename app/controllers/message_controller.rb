@@ -12,9 +12,9 @@ class MessageController < ApplicationController
     @room = Room.find(params[:room_id])
     @members = @room.users.where.not(id: current_user.id)
     @roomMember = RoomMember.where(user_id: current_user.id, room_id: @room.id).first_or_create
-    @roomMember.update(last_read: Time.now)
 
     if @message.save      
+      @roomMember.update(last_read: Time.now)
       @members.each do |user|
         RoomMember.first_or_create(user_id: user.id, room_id: @room.id)
         UserChannel.broadcast_to user,

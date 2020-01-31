@@ -7,6 +7,8 @@ class RoomsController < ApplicationController
   def index
     @rooms.each do |room| 
       room[:new_messages] = room.unreaded_messages(current_user.id)
+      logger.debug "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
+      logger.debug room.inspect
     end
 
     respond_to do |format|

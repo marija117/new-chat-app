@@ -6,7 +6,7 @@
         :current-user="currentUser"/>
     </div>
     <chat-room 
-      :on-submit="sendMessage" 
+      :on-submit="postMessage" 
       :edit-message="editMessage" 
       :load-old-messages="loadOldMessages"
       :delete-room="deleteRoom"
@@ -17,12 +17,14 @@
       :room="room"
       :room_id="room_id"/>
     <roomChannel/>
+    <userChannel/>
   </div>
 </template>
 
 <script>
-import roomChannel from "./components/room-channel";
 import Rails from "@rails/ujs";
+import roomChannel from "./components/room-channel";
+import userChannel from "./components/user-channel";
 import consumer from "./channels/consumer";
 import chatRoom from "./components/chat-room";
 import rooms from "./components/rooms";
@@ -37,7 +39,7 @@ export default {
       type: Number
     }
   },
-  components: {chatRoom, rooms, roomChannel},
+  components: {chatRoom, rooms, roomChannel, userChannel},
    data: function () {
     return {
       rooms: [],
@@ -48,41 +50,36 @@ export default {
     }
   },
   mounted() {
-    let self = this;
     this.getRooms();
     this.getMessages();
     eventBus.$emit("connectToRoom", this.room_id);
-    eventBus.$on('sendMessage', data => {
-      if (this.room_id == data.room_id) {
-        if (data.updated_at > data.created_at) {
-          const edit = (msg) => msg.id == data.id;
-          self.messages.find(edit).message = data.message;
-          self.messages.find(edit).updated_at = data.updated_at;
-        }
-        else {
-          self.messages.push(data)
-        } 
-      }
-    });
-    consumer.subscriptions.create(
-      {
-        channel: "UserChannel"
-      } ,{
-      connected() {
-        console.log("Connected to the notifications!");
-      },
-
-      disconnected() {
-        // Called when the subscription has been terminated by the server
-      },
-
-      received(data) {
-        const edit = (room) => room.id == data.room_id;
-        self.rooms.find(edit).new_messages = data.new_messages;
-      }
-    });
+    eventBus.$emit("connectNotification");
+    this.sendMessage();
+    this.sendNotification();
   },
   methods: {
+    sendMessage(){
+      let self = this;
+      eventBus.$on('sendMessage', data => {
+        if (this.room_id == data.room_id) {
+          if (data.updated_at > data.created_at) {
+            const edit = (msg) => msg.id == data.id;
+            self.messages.find(edit).message = data.message;
+            self.messages.find(edit).updated_at = data.updated_at;
+          }
+          else {
+            self.messages.push(data)
+          } 
+        }
+      });
+    },
+    sendNotification() {
+      let self = this;
+      eventBus.$on('sendNotification', data => {
+        const edit = (room) => room.id == data.room_id;
+        self.rooms.find(edit).new_messages = data.new_messages;
+      });
+    },
     getRooms() {
       Rails.ajax({
         url: "/rooms",
@@ -117,7 +114,7 @@ export default {
         error: (data) => {}
       })
     },
-   sendMessage(message) {
+   postMessage(message) {
       let message_id = message.id || '';
 
       Rails.ajax({

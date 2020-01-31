@@ -35,7 +35,6 @@
       },
     },
     mounted() {
-      console.log(this.rooms);
     }
   }
 </script>
