@@ -21,7 +21,7 @@ class MessageController < ApplicationController
           new_messages: @room.unreaded_messages(user.id),
           room_id: @room.id
       end
-      ChatChannel.broadcast_to @room, @message
+      RoomChannel.broadcast_to @room, @message
     else
       logger.debug "Errors: #{@message.errors.full_messages}"
     end

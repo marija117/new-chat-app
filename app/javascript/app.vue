@@ -16,12 +16,12 @@
       :message="message" 
       :room="room"
       :room_id="room_id"/>
-    <chatChannel/>
+    <roomChannel/>
   </div>
 </template>
 
 <script>
-import chatChannel from "./components/chat-channel";
+import roomChannel from "./components/room-channel";
 import Rails from "@rails/ujs";
 import consumer from "./channels/consumer";
 import chatRoom from "./components/chat-room";
@@ -37,7 +37,7 @@ export default {
       type: Number
     }
   },
-  components: {chatRoom, rooms, chatChannel},
+  components: {chatRoom, rooms, roomChannel},
    data: function () {
     return {
       rooms: [],
@@ -51,11 +51,19 @@ export default {
     let self = this;
     this.getRooms();
     this.getMessages();
-
-    eventBus.$on('sendMessage', messages => {
-      this.messages = messages;
+    eventBus.$emit("connectToRoom", this.room_id);
+    eventBus.$on('sendMessage', data => {
+      if (this.room_id == data.room_id) {
+        if (data.updated_at > data.created_at) {
+          const edit = (msg) => msg.id == data.id;
+          self.messages.find(edit).message = data.message;
+          self.messages.find(edit).updated_at = data.updated_at;
+        }
+        else {
+          self.messages.push(data)
+        } 
+      }
     });
-
     consumer.subscriptions.create(
       {
         channel: "UserChannel"
@@ -105,7 +113,6 @@ export default {
         success: (data) => {
           this.messages = data.messages;
           this.room = data.room;
-          eventBus.$emit("connectToChat", this.room.id, this.messages);
         },
         error: (data) => {}
       })
