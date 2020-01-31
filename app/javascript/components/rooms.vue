@@ -32,9 +32,7 @@
       },
       currentUser: {
         type: Number
-      },
-    },
-    mounted() {
+      }
     }
   }
 </script>

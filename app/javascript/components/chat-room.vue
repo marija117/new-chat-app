@@ -49,9 +49,6 @@ export default {
     },
     currentUser: {
       type: Number
-    },
-    room_id:{
-      type: Number
     }
   },
   data() {

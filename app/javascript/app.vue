@@ -14,8 +14,7 @@
       :current-user="currentUser" 
       :messages="messages" 
       :message="message" 
-      :room="room"
-      :room_id="room_id"/>
+      :room="room"/>
     <roomChannel/>
     <userChannel/>
   </div>
