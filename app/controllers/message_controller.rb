@@ -18,7 +18,7 @@ class MessageController < ApplicationController
       @members.each do |user|
         RoomMember.first_or_create(user_id: user.id, room_id: @room.id)
         UserChannel.broadcast_to user,
-          new_messages: @room.unreaded_messages(user),
+          new_messages: @room.unreaded_messages(user.id),
           room_id: @room.id
       end
       ChatChannel.broadcast_to @room, @message

@@ -16,14 +16,17 @@
       :message="message" 
       :room="room"
       :room_id="room_id"/>
+    <chatChannel/>
   </div>
 </template>
 
 <script>
+import chatChannel from "./components/chat-channel";
 import Rails from "@rails/ujs";
 import consumer from "./channels/consumer";
 import chatRoom from "./components/chat-room";
 import rooms from "./components/rooms";
+import { eventBus } from './packs/application';
 
 export default {
   props: {
@@ -34,7 +37,7 @@ export default {
       type: Number
     }
   },
-  components: {chatRoom, rooms},
+  components: {chatRoom, rooms, chatChannel},
    data: function () {
     return {
       rooms: [],
@@ -48,26 +51,26 @@ export default {
     let self = this;
     this.getRooms();
     this.getMessages();
+
+    eventBus.$on('sendMessage', messages => {
+      this.messages = messages;
+    });
+
     consumer.subscriptions.create(
       {
-        channel: "ChatChannel",
-        room: this.room_id,
+        channel: "UserChannel"
       } ,{
       connected() {
-        console.log("Connected to the chat!");
+        console.log("Connected to the notifications!");
       },
+
       disconnected() {
         // Called when the subscription has been terminated by the server
       },
+
       received(data) {
-        if (data.updated_at > data.created_at) {
-          const edit = (msg) => msg.id == data.id;
-          self.messages.find(edit).message = data.message;
-          self.messages.find(edit).updated_at = data.updated_at;
-        }
-        else {
-          self.messages.push(data)
-        }
+        const edit = (room) => room.id == data.room_id;
+        self.rooms.find(edit).new_messages = data.new_messages;
       }
     });
   },
@@ -83,6 +86,17 @@ export default {
         error: (data) => {}
       })
     },
+    deleteRoom() {
+      Rails.ajax({
+        url: "/rooms/" + this.room_id,
+        type: "delete",
+        data: "",
+        success: (data) => {
+          this.room = null;
+        },
+        error: (data) => {}
+      })
+    },
     getMessages() {
       Rails.ajax({
         url: "/rooms/" + this.room_id,
@@ -91,6 +105,7 @@ export default {
         success: (data) => {
           this.messages = data.messages;
           this.room = data.room;
+          eventBus.$emit("connectToChat", this.room.id, this.messages);
         },
         error: (data) => {}
       })
@@ -125,17 +140,6 @@ export default {
           } else {
             this.fromDate = null;
           }
-        },
-        error: (data) => {}
-      })
-    },
-    deleteRoom() {
-      Rails.ajax({
-        url: "/rooms/" + this.room_id,
-        type: "delete",
-        data: "",
-        success: (data) => {
-          this.room = null;
         },
         error: (data) => {}
       })

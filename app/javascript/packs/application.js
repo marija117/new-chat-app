@@ -12,10 +12,7 @@ import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
 import moment from 'moment'
 import App from '../app'
-import Rooms from '../components/rooms'
-import VueRouter from 'vue-router'
 
-Vue.use(VueRouter)
 Vue.use(TurbolinksAdapter)
 
 Vue.filter('formatDate', function(value) {
@@ -28,12 +25,13 @@ Vue.filter('truncate', function (text, stop, clamp) {
   return text.slice(0, stop) + (stop < text.length ? clamp || '...' : '')
 })
 
+export const eventBus = new Vue();
+
 document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
     el: '#chat',
     components: { 
-      App, 
-      Rooms
+      App
     }
   })
 })

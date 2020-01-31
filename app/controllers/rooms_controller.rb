@@ -5,6 +5,10 @@ class RoomsController < ApplicationController
   before_action :is_member, only: :show
 
   def index
+    @rooms.each do |room| 
+      room[:new_messages] = room.unreaded_messages(current_user.id)
+    end
+
     respond_to do |format|
       format.json { render json: { rooms: @rooms } }
       format.html

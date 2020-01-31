@@ -7,12 +7,12 @@
       <div v-for="(message, index) in messages" class="chat-message-container">
         <div class="row no-gutters" @change="getElement(index)">
           <div class="col d-flex">     
-            <div class="message-content flex-grow-1 msg-element" :class="{ otherUser: current_user !== message.user_id }">
-              <p class="mb-1 content" :class="{ 'text-right': current_user !== message.user_id }">
+            <div class="message-content flex-grow-1 msg-element" :class="{ otherUser: currentUser !== message.user_id }">
+              <p class="mb-1 content" :class="{ 'text-right': currentUser !== message.user_id }">
                 {{ message.message }}
               </p>
-              <div :class="{ 'text-right': current_user == message.user_id }">
-                <small v-if="current_user == message.user_id && !message.archived">
+              <div :class="{ 'text-right': currentUser == message.user_id }">
+                <small v-if="currentUser == message.user_id && !message.archived">
                   <i class="fa fa-edit pointer" @click="editMessage(message)"></i> |
                 </small>
                 <small v-if="message.updated_at > message.created_at">
@@ -48,7 +48,7 @@ export default {
     messages: {
       type: Array
     },
-    current_user: {
+    currentUser: {
       type: Number
     },
   },

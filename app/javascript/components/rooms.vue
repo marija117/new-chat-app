@@ -11,6 +11,7 @@
             <a class="nav-link room-nav-link" :href="`http://localhost:3000/rooms/${room.id}`" tooltip.hover :title="room.name">
               {{ room.name | truncate(10) }}
             </a>
+            <span v-if="room.new_messages > 0" id="notification">{{ room.new_messages }}</span>
           </div>
         </div>
       </nav>
@@ -34,6 +35,7 @@
       },
     },
     mounted() {
+      console.log(this.rooms);
     }
   }
 </script>

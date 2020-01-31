@@ -33,13 +33,13 @@
 }
 .parent {
   position: relative;
-  display: inline-block;
 }
 
-p#notification {
+#notification {
   position: absolute;
   padding: 2px 8px;
-  margin-left: 70px;
+  transform: translate(0, -50px);
+  margin-left: 240px;
   border-radius: 50%;
   background-color: red;
   color: white;
